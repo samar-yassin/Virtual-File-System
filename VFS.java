@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VFS {
-    static ArrayList<String> commands = new ArrayList<>(List.of("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure"));
+    static ArrayList<String> commands = new ArrayList<>(List.of("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
 
 
 
