@@ -9,6 +9,7 @@ public class File1 {
     private String name;
     AllocationTechniques technique;
     int blockStart;
+    int indexForIndexedAllocation;
 
 
     File1(String filePath , int size , String name){
@@ -23,6 +24,14 @@ public class File1 {
 
     public void setIndexedAllocated(ArrayList<LinkedSection> indexedAllocated) {
         this.indexedAllocated = indexedAllocated;
+    }
+
+    public void setIndexForIndexedAllocation(int indexForIndexedAllocation) {
+        this.indexForIndexedAllocation = indexForIndexedAllocation;
+    }
+
+    public int getIndexForIndexedAllocation() {
+        return indexForIndexedAllocation;
     }
 
     public ArrayList<LinkedSection> getIndexedAllocated() {

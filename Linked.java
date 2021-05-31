@@ -33,9 +33,8 @@ public class Linked implements AllocationTechniques {
         }
         file1.setIndexedAllocated(Allocated);
 
-        String blocks = manger.getBlocks();
         int start ,end , diff;
-        String newBlocks="";
+        String newBlocks=manger.getBlocks();
         for(int i=0; i<Allocated.size() ; i++) {
             String block = "";
             start=Allocated.get(i).start;
@@ -45,7 +44,7 @@ public class Linked implements AllocationTechniques {
                 block += "1";
 
             }
-            newBlocks += blocks.substring(0, start) + block + blocks.substring(end);
+            newBlocks = newBlocks.substring(0, start) + block + newBlocks.substring(end);
 
         }
 
@@ -57,11 +56,10 @@ public class Linked implements AllocationTechniques {
 
     @Override
     public void deallocate(FreeSpaceManger manger, File1 file1) {
-        String blocks = manger.getBlocks();
         ArrayList<LinkedSection>Allocated =new ArrayList<LinkedSection>();
         Allocated = file1.getIndexedAllocated();
         int start ,end , diff;
-        String newBlocks="";
+        String newBlocks=manger.getBlocks();
         for (LinkedSection linkedSection : Allocated) {
             String block = "";
             start = linkedSection.start;
@@ -71,7 +69,7 @@ public class Linked implements AllocationTechniques {
                 block += "0";
 
             }
-            newBlocks += blocks.substring(0, start) + block + blocks.substring(end);
+            newBlocks = newBlocks.substring(0, start) + block + newBlocks.substring(end);
 
         }
         manger.setBlocks(newBlocks);

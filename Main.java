@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 /*
-CreateFile root/file2.txt 10
+CreateFile root/file1.txt 10
 CreateFile root/folder1/file.txt 40
 
 CreateFolder root/folder1
 
-DeleteFile root/file2.txt
+DeleteFile root/file1.txt
 
 DeleteFolder root/folder1
 

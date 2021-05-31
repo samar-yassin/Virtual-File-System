@@ -1,36 +1,70 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Indexed implements AllocationTechniques {
 
     @Override
     public void allocate(FreeSpaceManger manger, File1 f) {
         int indexBlock = -1;
-        boolean flag = false;
-        //++requiredBlocks;
+        int count=0;
+        ArrayList<Integer> Allocated=new ArrayList<>();
+        String blocks = manger.getBlocks();
 
-        f.setSize(f.getSize() + 1);
-        for (int i = 0; i < f.getSize(); i++) {
-            if (f.blocks.get(i).isAvailable()) {
-                if (!flag) { // index block not yet allocated
-                    f.blocks.get(i).setAvailable(false);
+        String newBlocks=blocks;
+        //searching for empty blocks
+        for(int i =0 ; i <manger.getDiskSize() ; i++){
+            if(manger.getBlocks().charAt(i)=='0'){
+                Allocated.add(i);
+                count++;
+            }
+            if(count==f.getSize()){
+                break;
+            }
+
+        }
+
+        //searching for index block
+
+        for(int i =0 ; i <manger.getDiskSize() ; i++){
+            if(manger.getBlocks().charAt(i)=='0'){
+                if(!Allocated.contains(i)) {
                     indexBlock = i;
-                    flag = true;
-                } else {    // index block allocated
-                    f.blocks.get(i).setAvailable(false);
-                    f.blocks.get(indexBlock).getData().add(i);
+                    break;
                 }
-                //if (f.blocks.get(indexBlock).getData().size() == manger.getDiskSize())
-                    //return indexBlock;
             }
         }
-        //if (indexBlock != -1)
-            //de_allocate(indexBlock);
-        //return -1;
+
+        ArrayList<Integer> blocksToAllocate = Allocated;
+        blocksToAllocate.add(indexBlock);
+        Collections.sort(blocksToAllocate);
+
+        for(int i=0; i<blocksToAllocate.size() ; i++) {
+
+            newBlocks = newBlocks.substring(0, blocksToAllocate.get(i))+ "1" + newBlocks.substring(blocksToAllocate.get(i)+1);
+
+        }
+        manger.setBlocks(newBlocks);
+        f.setAllocatedBlocks(Allocated);
+        f.setIndexForIndexedAllocation(indexBlock);
+
+
+
     }
 
     @Override
     public void deallocate(FreeSpaceManger manger, File1 f) {
-        for (int i : f.blocks.get(f.blockStart).getData())
-            f.blocks.get(i).setAvailable(true);
-        f.blocks.get(f.blockStart).setAvailable(true);
-        f.blocks.get(f.blockStart).getData().clear();
+        ArrayList<Integer>Allocated =new ArrayList<Integer>();
+        Allocated = f.getAllocatedBlocks();
+        int index = f.getIndexForIndexedAllocation();
+        ArrayList<Integer>NewAllocated =Allocated;
+        NewAllocated.add(index);
+        String newBlocks=manger.getBlocks();
+        for(int i=0; i<NewAllocated.size() ; i++) {
+
+            newBlocks = newBlocks.substring(0, NewAllocated.get(i))+ "0" + newBlocks.substring(NewAllocated.get(i)+1);
+
+        }
+        manger.setBlocks(newBlocks);
+
     }
 }
