@@ -23,10 +23,6 @@ public class Main {
         //this is to save the information like (the files information, the folders information,
         // the allocated blocks and so on) to be able to load it the next time we run the application.
 
-        File theDir = new File("C:/AOS-A3-root");
-        if (!theDir.exists()){
-            theDir.mkdirs();
-        }
 
 
         Scanner sc= new Scanner(System.in);
@@ -36,13 +32,10 @@ public class Main {
         System.out.println("Enter \"help\" to get list of commands & \"exit\" to close the program");
 
         while (true) {
-            System.out.print("root$ ");
+            System.out.print("$ ");
             command = sc.nextLine();
             String[] parameters = command.split(" ");
 
-            //file name could contains more than sub-directories
-            //pathParameters is used to get the file/folder name
-            String[] pathParameters = parameters[1].split("/");
             command = parameters[0];
             if (command.equals("")) {
                 continue;
@@ -65,7 +58,7 @@ public class Main {
                 } else if (command.equals("exit")) {
                     System.exit(0);
                 } else {
-
+                    String path = parameters[1];
                     if (command.equals("CreateFile")) {
                         System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
                                 "2-\tIndexed Allocation\n" +
@@ -79,18 +72,14 @@ public class Main {
                         int size =Integer.parseInt(parameters[2]);
                         vfs.createFile(parameters[1],size,algoNo);
 
-                    //to create a folder enter this path C:/AOS-A3-root/ followed by the folder's path
                     } else if (command.equalsIgnoreCase("CreateFolder")) {
-                            Directory newDir = new Directory(parameters[1], pathParameters[pathParameters.length - 1]);
-                            File dir = new File(parameters[1]);
-                            if (!dir.exists()){
-                                dir.mkdirs();
-                            } else {
-                                System.out.println("Directory already exists");
-                            }
+                        vfs.createFolder(path);
+
                     } else if (command.equalsIgnoreCase("DeleteFile")) {
+                        vfs.deleteFile(path);
 
                     } else if (command.equalsIgnoreCase("DeleteFolder")) {
+                        vfs.deleteFolder(path);
                     }
                 }
             } else System.out.println("\"" + command + "\"" + " Command not found.");
