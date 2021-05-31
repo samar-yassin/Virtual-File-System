@@ -2,7 +2,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+/*
+CreateFile root/file2.txt 20
+CreateFile root/folder1/file.txt 20
 
+CreateFolder root/folder1/folder2
+
+DeleteFile root/folder1/file.txt
+
+DeleteFolder root/folder1
+
+DisplayDiskStatus
+
+DisplayDiskStructure
+ */
 public class Main {
 
     private static VFS vfs=new VFS();

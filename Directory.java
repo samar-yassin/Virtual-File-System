@@ -18,6 +18,7 @@ public class Directory {
         System.out.println("<"+this.name+">");
         for(File f : this.getFiles()){
             if(!f.isDeleted()){
+                for(int i=0;i<level+4;i++) System.out.print(" ");
                 System.out.println(f.getName());
             }
         }

@@ -34,9 +34,12 @@ public class VFS {
 
 
     void createFile(String path , int size , int tech){
-        Directory dire = new Directory("root","root");
-        directories.add(dire);
-        if(size > spaceManger.getNumberOFfreeBlocks()) return ;
+
+        if(size > spaceManger.getNumberOFfreeBlocks()){
+            System.out.println("-NO SPACE");
+            return ;
+        }
+
         String folders[] = path.split("/");
         String fileName=folders[folders.length-1];
 
@@ -46,9 +49,9 @@ public class VFS {
             newPath+=folders[i];
             if(i!=folders.length-2)newPath+="/";
         }
-       // System.out.println(newPath);
+
+
         for(Directory dir : directories){
-            //System.out.println(dir.getDirectoryPath()+"-------");
             if(newPath.equals(dir.getDirectoryPath())){
                 lastDir = dir;
             }
@@ -85,14 +88,13 @@ public class VFS {
 
     void createFolder(String path){
         String folders[] = path.split("/");
-        String dirName = folders[-1];
+        String dirName = folders[folders.length-1];
         String newPath="";
         Directory lastDir= null;
         for( int  i = 0 ; i < folders.length-1 ; i++){  //new path without the folder name
             newPath+=folders[i];
             if(i!=folders.length-2)newPath+="/";
         }
-        System.out.println(newPath);
         for(Directory dir : directories){
             if(newPath.equals(dir.getDirectoryPath())){
                 lastDir = dir;
@@ -117,7 +119,7 @@ public class VFS {
     void deleteFile(String path){
 
         String folders[] = path.split("/");
-        String fileName = folders[-1];
+        String fileName = folders[folders.length-1];
         String newPath="";
         Directory lastDir= null;
         for( int  i = 0 ; i < folders.length-1 ; i++){  //new path without the folder name
@@ -153,7 +155,7 @@ public class VFS {
     void deleteFolder(String path){
 
         String folders[] = path.split("/");
-        String dirName = folders[-1];
+        String dirName = folders[folders.length-1];
         String newPath="";
         Directory lastDir= null;
 
@@ -212,6 +214,7 @@ public class VFS {
     }
 
     void displayDiskStructure(int level) {
+
         root.printDirectoryStructure(level);
     }
 
