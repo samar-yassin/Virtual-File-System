@@ -1,3 +1,28 @@
 public class FreeSpaceManger {
+    private int diskSize =50 , numberOFfreeBlocks = 200 ;  //200 KB
+    private String blocks ="00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
 
+    public void setBlocks(String blocks) {
+        this.blocks = blocks;
+    }
+
+    public void setDiskSize(int diskSize) {
+        this.diskSize = diskSize;
+    }
+
+    public void substractFromNumberOFfreeBlocks(int toSubstract) {
+        this.numberOFfreeBlocks -= toSubstract;
+    }
+
+    public int getNumberOFfreeBlocks() {
+        return numberOFfreeBlocks;
+    }
+
+    public int getDiskSize() {
+        return diskSize;
+    }
+
+    public String getBlocks() {
+        return blocks;
+    }
 }

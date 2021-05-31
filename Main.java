@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+    private static VFS vfs=new VFS();
     static boolean checkLengthParams(String command , int length) {
         if (command.equals("DisplayDiskStatus") || command.equals("DisplayDiskStructure") || command.equals("help") || command.equals("exit")) {
             if (length > 1) return false;
@@ -18,6 +19,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+
         Scanner sc= new Scanner(System.in);
         String command;
         ArrayList commandList = VFS.getCommandList();
@@ -50,14 +52,15 @@ public class Main {
                 } else if (command.equals("exit")) {
                     System.exit(0);
                 } else {
-                    System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
-                            "2-\tIndexed Allocation\n" +
-                            "3-\tLinked Allocation\n");
-                    System.out.println("Algorithm number : ");
-                    String algoNo = sc.nextLine();
-                    System.out.println(algoNo);
 
                     if (command.equals("CreateFile")) {
+                        System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
+                                "2-\tIndexed Allocation\n" +
+                                "3-\tLinked Allocation\n");
+                        System.out.println("Algorithm number : ");
+                        int algoNo = Integer.parseInt(sc.nextLine());
+                        int size =Integer.parseInt(parameters[2]);
+                        vfs.createFile(parameters[1],size,algoNo);
 
                     } else if (command.equals("CreateFolder")) {
 
