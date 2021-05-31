@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 /*
-CreateFile root/file2.txt 20
-CreateFile root/folder1/filell.txt 40
+CreateFile root/file2.txt 10
+CreateFile root/folder1/file.txt 40
 
 CreateFolder root/folder1
 

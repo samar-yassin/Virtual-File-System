@@ -4,6 +4,7 @@ public class File1 {
     private String filePath;
     private int size;
     private ArrayList<Integer> allocatedBlocks;
+    private ArrayList<LinkedSection> indexedAllocated;
     private boolean deleted;
     private String name;
     AllocationTechniques technique;
@@ -18,6 +19,14 @@ public class File1 {
 
     public void setTechnique(AllocationTechniques technique) {
         this.technique = technique;
+    }
+
+    public void setIndexedAllocated(ArrayList<LinkedSection> indexedAllocated) {
+        this.indexedAllocated = indexedAllocated;
+    }
+
+    public ArrayList<LinkedSection> getIndexedAllocated() {
+        return indexedAllocated;
     }
 
     public AllocationTechniques getTechnique() {
