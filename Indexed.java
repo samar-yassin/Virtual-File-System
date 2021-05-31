@@ -5,6 +5,7 @@ public class Indexed implements AllocationTechniques {
         int indexBlock = -1;
         boolean flag = false;
         //++requiredBlocks;
+
         f.setSize(f.getSize() + 1);
         for (int i = 0; i < f.getSize(); i++) {
             if (f.blocks.get(i).isAvailable()) {
