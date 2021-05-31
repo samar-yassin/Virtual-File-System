@@ -1,6 +1,6 @@
 public interface AllocationTechniques {
 
-    void allocate(FreeSpaceManger manger , int size);
-    void deallocate(FreeSpaceManger manger);
+    void allocate(FreeSpaceManger manger , File f);
+    void deallocate(FreeSpaceManger manger,File f);
 
 }

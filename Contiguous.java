@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class Contiguous implements AllocationTechniques {
     @Override
-    public void allocate(FreeSpaceManger manger,int size) {
+    public void allocate(FreeSpaceManger manger,File file) {
         int biggestCount=0;
         int biggestIndex=0;
         boolean newBlock= true;    //to know If i entered a new block of 0s or 1s
@@ -17,7 +18,7 @@ public class Contiguous implements AllocationTechniques {
                 count++;
             }
             else{
-                if((count >= size) && (count >= biggestCount)){
+                if((count >= file.getSize()) && (count >= biggestCount)){
                     biggestCount=count;
                     biggestIndex=index;
                 }
@@ -27,10 +28,7 @@ public class Contiguous implements AllocationTechniques {
         }
 
 
-        System.out.println(count);
-        System.out.println(size);
-        System.out.println(biggestCount);
-        if(count>=size && count>=biggestCount){
+        if(count>=file.getSize() && count>=biggestCount){
             biggestCount=count;
             biggestIndex=index;
         }
@@ -38,20 +36,36 @@ public class Contiguous implements AllocationTechniques {
 
 
         String block="";
-        for(int i=0 ; i<size ; i++){
+        ArrayList<Integer> allocated = new ArrayList<>();
+        int idx = biggestIndex;
+        for(int i=0 ; i<file.getSize() ; i++){
             block+="1";
+            allocated.add(idx++);
         }
-        System.out.println(biggestCount);
 
+        for(int i=0 ; i<file.getSize() ; i++){
+            System.out.println(allocated.get(i));
+        }
+        System.out.println(allocated.size());
         String blocks = manger.getBlocks();
-        String newBlocks= blocks.substring(0,biggestIndex) +block + blocks.substring(biggestIndex+size);
+        String newBlocks= blocks.substring(0,biggestIndex) +block + blocks.substring(biggestIndex+file.getSize());
         manger.setBlocks(newBlocks);
-        System.out.println(manger.getBlocks());
+
+        file.setBlockStart(biggestIndex);
+        file.setAllocatedBlocks(allocated);
 
     }
 
     @Override
-    public void deallocate(FreeSpaceManger manger) {
+    public void deallocate(FreeSpaceManger manger,File file) {
+        String block="";
+
+        for(int i=0 ; i<file.getSize() ; i++){
+            block+="0";
+        }
+        String blocks = manger.getBlocks();
+        String newBlocks= blocks.substring(0,file.blockStart) +block + blocks.substring(file.blockStart+file.getSize());
+        manger.setBlocks(newBlocks);
 
     }
 }

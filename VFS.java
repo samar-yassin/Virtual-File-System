@@ -64,17 +64,27 @@ public class VFS {
                     return;
                 }
             }
-            AllocationTechniques technique = null;
-            if(tech==1)
-             technique = new Contiguous();
-            else if(tech==2)
-                technique = new Indexed();
-            else if(tech==3)
-                technique = new Linked();
-
-            technique.allocate(spaceManger,size);
 
             File f = new File(path,size,fileName);
+
+
+            AllocationTechniques technique = null;
+            if(tech==1) {
+                technique = new Contiguous();
+                f.setTechnique(new Contiguous());
+            }
+            else if(tech==2) {
+                technique = new Indexed();
+                f.setTechnique(new Indexed());
+            }else if(tech==3) {
+                technique = new Linked();
+                f.setTechnique(new Linked());
+
+            }
+
+
+            technique.allocate(spaceManger,f);
+
             lastDir.addFile(f);
             files.add(f);
             spaceManger.substractFromNumberOFfreeBlocks(size);
@@ -141,6 +151,8 @@ public class VFS {
                     lastDir.setDeleted(true);
                     f.setDeleted(true);
                     spaceManger.addToNumberOFfreeBlocks(f.getSize());
+                    f.getTechnique().deallocate(spaceManger,f);
+
                     System.out.println("removed successfully");
                     return;
                 }
@@ -194,6 +206,7 @@ public class VFS {
         for(File f : toDelete.getFiles()){
             f.setDeleted(true);
             spaceManger.addToNumberOFfreeBlocks(f.getSize());
+            f.getTechnique().deallocate(spaceManger,f);
 
         }
         for (Directory d : toDelete.getSubDirectories()){
