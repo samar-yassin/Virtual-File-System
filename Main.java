@@ -48,8 +48,10 @@ public class Main {
                 }
 
                 if (command.equals("DisplayDiskStatus")) {
+                    vfs.displayDiskStatus();
 
                 } else if (command.equals("DisplayDiskStructure")) {
+                    vfs.displayDiskStructure(0);
 
                 } else if (command.equals("help")) {
                     for (int x = 0; x < VFS.getCommandList().size(); x++) {

@@ -7,6 +7,11 @@ public class VFS {
     FreeSpaceManger spaceManger = new FreeSpaceManger();
     ArrayList<Directory> directories = new ArrayList();
     ArrayList<File> files = new ArrayList();
+    Directory root = new Directory("root","root");
+
+    VFS(){
+        directories.add(root);
+    }
 
     static ArrayList getCommandList(){
         return commands;
@@ -89,7 +94,6 @@ public class VFS {
         }
         System.out.println(newPath);
         for(Directory dir : directories){
-            System.out.println(dir.getDirectoryPath()+"-------");
             if(newPath.equals(dir.getDirectoryPath())){
                 lastDir = dir;
             }
@@ -98,7 +102,7 @@ public class VFS {
         if(lastDir != null) {
             for (Directory d : lastDir.getSubDirectories()) {
                 if (d.getName().equals(dirName)) {
-                    System.out.println("File name is already taken.");
+                    System.out.println("Folder name is already taken.");
                     return;
                 }
             }
@@ -181,11 +185,6 @@ public class VFS {
                 return;
             }
 
-
-
-
-
-
         }else  System.out.println("-Path doesn't exist.");
     }
 
@@ -212,8 +211,8 @@ public class VFS {
 
     }
 
-    void displayDiskStructure(){
-
+    void displayDiskStructure(int level) {
+        root.printDirectoryStructure(level);
     }
 
 }

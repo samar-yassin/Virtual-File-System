@@ -15,6 +15,10 @@ public class File {
         this.name = name;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     public String getName() {
         return name;
     }

@@ -13,6 +13,23 @@ public class Directory {
     }
 
 
+    public void printDirectoryStructure(int level) {
+        for(int i=0;i<level;i++) System.out.print(" ");
+        System.out.println("<"+this.name+">");
+        for(File f : this.getFiles()){
+            if(!f.isDeleted()){
+                System.out.println(f.getName());
+            }
+        }
+
+        for (Directory d : this.getSubDirectories()){
+            if(!d.isDeleted()) {
+                d.printDirectoryStructure(level+4);
+            }
+        }
+
+    }
+
     public String getName() {
         return name;
     }
@@ -23,6 +40,10 @@ public class Directory {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
     public void setDirectoryPath(String directoryPath) {
