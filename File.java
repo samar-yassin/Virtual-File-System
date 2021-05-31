@@ -14,6 +14,15 @@ public class File {
         this.size = size;
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }

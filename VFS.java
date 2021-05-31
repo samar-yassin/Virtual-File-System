@@ -2,8 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VFS {
+    static int ID =0;
     static ArrayList<String> commands = new ArrayList<>(List.of("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
-    FreeSpaceManger spaceManger;
+    FreeSpaceManger spaceManger = new FreeSpaceManger();
     ArrayList<Directory> directories = new ArrayList();
     ArrayList<File> files = new ArrayList();
 
@@ -28,9 +29,11 @@ public class VFS {
 
 
     void createFile(String path , int size , int tech){
+        Directory dire = new Directory("root","root");
+        directories.add(dire);
         if(size > spaceManger.getNumberOFfreeBlocks()) return ;
         String folders[] = path.split("/");
-        String fileName=folders[-1];
+        String fileName=folders[folders.length-1];
 
         String newPath="";
         Directory lastDir= null;
@@ -38,25 +41,31 @@ public class VFS {
             newPath+=folders[i];
             if(i!=folders.length-2)newPath+="/";
         }
-        System.out.println(newPath);
+       // System.out.println(newPath);
         for(Directory dir : directories){
-            System.out.println(dir.getDirectoryPath()+"-------");
+            //System.out.println(dir.getDirectoryPath()+"-------");
             if(newPath.equals(dir.getDirectoryPath())){
                 lastDir = dir;
             }
         }
-        System.out.println(lastDir.getDirectoryPath());
-        System.out.println(lastDir.getName());
 
         if(lastDir != null){
             for(File f : lastDir.getFiles()){
-                if(path.equals(fileName)) {
+                if(f.getName().equals(fileName)) {
                     System.out.println("File name is already taken.");
                     return;
                 }
             }
+            AllocationTechniques technique = null;
+            if(tech==1)
+             technique = new Contiguous();
+            else if(tech==2)
+                technique = new Indexed();
+            else if(tech==3)
+                technique = new Linked();
 
-            // ## some code here technique or something idk
+            technique.allocate(spaceManger,size);
+
             File f = new File(path,size,fileName);
             lastDir.addFile(f);
             files.add(f);
@@ -87,8 +96,8 @@ public class VFS {
         }
 
         if(lastDir != null) {
-            for (Directory f : lastDir.getSubDirectories()) {
-                if (path.equals(dirName)) {
+            for (Directory d : lastDir.getSubDirectories()) {
+                if (d.getName().equals(dirName)) {
                     System.out.println("File name is already taken.");
                     return;
                 }
@@ -98,19 +107,108 @@ public class VFS {
             Directory d = new Directory(path, dirName);
             lastDir.addSubDirectories(d);
             directories.add(d);
-
         }
         }
 
-    void deleteFile(){
+    void deleteFile(String path){
 
+        String folders[] = path.split("/");
+        String fileName = folders[-1];
+        String newPath="";
+        Directory lastDir= null;
+        for( int  i = 0 ; i < folders.length-1 ; i++){  //new path without the folder name
+            newPath+=folders[i];
+            if(i!=folders.length-2)newPath+="/";
+        }
+
+        for(Directory dir : directories){
+            if(newPath.equals(dir.getDirectoryPath())){
+                lastDir = dir;
+            }
+        }
+
+        if(lastDir != null) {
+            for (File f : lastDir.getFiles()) {
+                if (f.getName().equals(fileName)) {
+                   // files.remove(f);
+                   // lastDir.getFiles().remove(f);
+                    lastDir.setDeleted(true);
+                    f.setDeleted(true);
+                    spaceManger.addToNumberOFfreeBlocks(f.getSize());
+                    System.out.println("removed successfully");
+                    return;
+                }
+            }
+            System.out.println("No such file");
+
+
+
+        }
     }
 
-    void deleteFolder(){
+    void deleteFolder(String path){
+
+        String folders[] = path.split("/");
+        String dirName = folders[-1];
+        String newPath="";
+        Directory lastDir= null;
+
+        for( int  i = 0 ; i < folders.length-1 ; i++){  //new path without the folder name
+            newPath+=folders[i];
+            if(i!=folders.length-2)newPath+="/";
+        }
+
+        for(Directory dir : directories){
+            if(newPath.equals(dir.getDirectoryPath())){
+                lastDir = dir;
+            }
+        }
+
+        if(lastDir != null) {
+            Directory toDelete=null;
+            for (Directory d : lastDir.getSubDirectories()) {
+                if (d.getName().equals(dirName)) {
+                    toDelete=d;
+                }
+            }
+
+            if (toDelete !=null) {
+                RecursionDelete(toDelete);
+
+
+            }else {
+                System.out.println("-Path doesn't exist.");
+                return;
+            }
+
+
+
+
+
+
+        }else  System.out.println("-Path doesn't exist.");
+    }
+
+    void RecursionDelete(Directory toDelete) {
+        for(File f : toDelete.getFiles()){
+            f.setDeleted(true);
+            spaceManger.addToNumberOFfreeBlocks(f.getSize());
+
+        }
+        for (Directory d : toDelete.getSubDirectories()){
+            RecursionDelete(d);
+        }
+
+        toDelete.setDeleted(true);
+
 
     }
 
     void displayDiskStatus(){
+        System.out.println("empty space : "+spaceManger.getNumberOFfreeBlocks()+" KB");
+        System.out.println("allocated space : "+(spaceManger.getDiskSize()-spaceManger.getNumberOFfreeBlocks())+" KB");
+        System.out.println("REPRESENTATION :");
+        System.out.println(spaceManger.getBlocks());
 
     }
 

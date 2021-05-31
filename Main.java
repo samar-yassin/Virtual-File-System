@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -26,6 +27,7 @@ public class Main {
         if (!theDir.exists()){
             theDir.mkdirs();
         }
+
 
         Scanner sc= new Scanner(System.in);
         String command;
@@ -70,6 +72,10 @@ public class Main {
                                 "3-\tLinked Allocation\n");
                         System.out.print("Algorithm number: ");
                         int algoNo = Integer.parseInt(sc.nextLine());
+                        if(algoNo != 1 && algoNo !=2 && algoNo !=3){
+                            System.out.println("-Something went wrong");
+                            continue;
+                        }
                         int size =Integer.parseInt(parameters[2]);
                         vfs.createFile(parameters[1],size,algoNo);
 

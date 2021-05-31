@@ -7,10 +7,11 @@ public class Directory {
     private ArrayList <Directory> subDirectories = new ArrayList<>();
     private boolean deleted = false;
 
-    Directory(String filePath , String name){
+    Directory(String filePath , String name ){
         this.directoryPath=filePath;
         this.name=name;
     }
+
 
     public String getName() {
         return name;
