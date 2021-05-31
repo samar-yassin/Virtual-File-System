@@ -1,14 +1,16 @@
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 /*
 CreateFile root/file2.txt 20
-CreateFile root/folder1/file.txt 20
+CreateFile root/folder1/filell.txt 40
 
-CreateFolder root/folder1/folder2
+CreateFolder root/folder1
 
-DeleteFile root/folder1/file.txt
+DeleteFile root/file2.txt
 
 DeleteFolder root/folder1
 
@@ -18,7 +20,30 @@ DisplayDiskStructure
  */
 public class Main {
 
-    private static VFS vfs=new VFS();
+    File diskStructure = new File("DiskStructure.vfs");
+    static FileWriter myWriter;
+
+    static {
+        try {
+            myWriter = new FileWriter("DiskStructure.vfs");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static VFS vfs;
+
+    static {
+        try {
+            vfs = new VFS();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Main() throws IOException {
+    }
+
     static boolean checkLengthParams(String command , int length) {
         if (command.equals("DisplayDiskStatus") || command.equals("DisplayDiskStructure") || command.equals("help") || command.equals("exit")) {
             if (length > 1) return false;
@@ -32,7 +57,7 @@ public class Main {
         return true;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //this is to save the information like (the files information, the folders information,
         // the allocated blocks and so on) to be able to load it the next time we run the application.
 
@@ -71,7 +96,7 @@ public class Main {
                         System.out.println("\t" + (VFS.getCommandList().get(x)));
                     }
                 } else if (command.equals("exit")) {
-                    System.exit(0);
+                    break;
                 } else {
                     String path = parameters[1];
                     if (command.equals("CreateFile")) {
@@ -99,5 +124,22 @@ public class Main {
                 }
             } else System.out.println("\"" + command + "\"" + " Command not found.");
         }
+
+        myWriter = new FileWriter("DiskStructure.vfs");
+        myWriter.write(  vfs.spaceManger.getBlocks() + " - " + vfs.spaceManger.getNumberOFfreeBlocks() );
+        myWriter.write("\n");
+        for(File1 f : vfs.files) {
+            myWriter.write("F" + " - " + f.getFilePath()  + " - " + f.getName() + " - " + f.getSize() + " - " + f.getTechnique() + " - " + f.blockStart + " - " + f.isDeleted());
+            myWriter.write("\n");
+        }
+        for(Directory d: vfs.directories){
+            myWriter.write("D" + " - " + d.getDirectoryPath() + " - " + d.getName() +" - " + d.isDeleted());
+            myWriter.write("\n");
+
+        }
+
+        myWriter.close();
+
+
     }
 }

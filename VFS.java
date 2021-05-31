@@ -1,15 +1,20 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VFS {
-    static int ID =0;
+
     static ArrayList<String> commands = new ArrayList<>(List.of("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
     FreeSpaceManger spaceManger = new FreeSpaceManger();
     ArrayList<Directory> directories = new ArrayList();
-    ArrayList<File> files = new ArrayList();
+    ArrayList<File1> files = new ArrayList();
     Directory root = new Directory("root","root");
 
-    VFS(){
+
+    VFS() throws IOException {
         directories.add(root);
     }
 
@@ -33,7 +38,7 @@ public class VFS {
 
 
 
-    void createFile(String path , int size , int tech){
+    void createFile(String path , int size , int tech) throws IOException {
 
         if(size > spaceManger.getNumberOFfreeBlocks()){
             System.out.println("-NO SPACE");
@@ -58,14 +63,14 @@ public class VFS {
         }
 
         if(lastDir != null){
-            for(File f : lastDir.getFiles()){
+            for(File1 f : lastDir.getFile1s()){
                 if(f.getName().equals(fileName)) {
                     System.out.println("File name is already taken.");
                     return;
                 }
             }
 
-            File f = new File(path,size,fileName);
+            File1 f = new File1(path,size,fileName);
 
 
             AllocationTechniques technique = null;
@@ -88,6 +93,7 @@ public class VFS {
             lastDir.addFile(f);
             files.add(f);
             spaceManger.substractFromNumberOFfreeBlocks(size);
+
 
 
         }else System.out.println("-Path doesn't exist.");
@@ -144,7 +150,7 @@ public class VFS {
         }
 
         if(lastDir != null) {
-            for (File f : lastDir.getFiles()) {
+            for (File1 f : lastDir.getFile1s()) {
                 if (f.getName().equals(fileName)) {
                    // files.remove(f);
                    // lastDir.getFiles().remove(f);
@@ -203,7 +209,7 @@ public class VFS {
     }
 
     void RecursionDelete(Directory toDelete) {
-        for(File f : toDelete.getFiles()){
+        for(File1 f : toDelete.getFile1s()){
             f.setDeleted(true);
             spaceManger.addToNumberOFfreeBlocks(f.getSize());
             f.getTechnique().deallocate(spaceManger,f);

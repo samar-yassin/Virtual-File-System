@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Directory {
     private String directoryPath;
     private String name;
-    private ArrayList <File> files = new ArrayList<>();
+    private ArrayList <File1> file1s = new ArrayList<>();
     private ArrayList <Directory> subDirectories = new ArrayList<>();
     private boolean deleted = false;
 
@@ -13,10 +13,11 @@ public class Directory {
     }
 
 
+
     public void printDirectoryStructure(int level) {
         for(int i=0;i<level;i++) System.out.print(" ");
         System.out.println("<"+this.name+">");
-        for(File f : this.getFiles()){
+        for(File1 f : this.getFile1s()){
             if(!f.isDeleted()){
                 for(int i=0;i<level+4;i++) System.out.print(" ");
                 System.out.println(f.getName());
@@ -51,8 +52,8 @@ public class Directory {
         this.directoryPath = directoryPath;
     }
 
-    public void addFile(File file) {
-        this.files.add(file);
+    public void addFile(File1 file1) {
+        this.file1s.add(file1);
     }
 
     public void addSubDirectories(Directory subDirectorie) {
@@ -63,8 +64,8 @@ public class Directory {
         return subDirectories;
     }
 
-    public ArrayList<File> getFiles() {
-        return files;
+    public ArrayList<File1> getFile1s() {
+        return file1s;
     }
 
     public String getDirectoryPath() {

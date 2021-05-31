@@ -2,12 +2,17 @@ public class Linked implements AllocationTechniques {
 
 
     @Override
-    public void allocate(FreeSpaceManger manger, File file) {
+    public void allocate(FreeSpaceManger manger, File1 file1) {
 
     }
 
     @Override
-    public void deallocate(FreeSpaceManger manger ,File file) {
+    public void deallocate(FreeSpaceManger manger , File1 file1) {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Linked";
     }
 }
