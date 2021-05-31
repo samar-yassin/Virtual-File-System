@@ -31,4 +31,10 @@ public class Contiguous extends AllocationTechnique {
         for (int i = startBlock; i < endBlock; i++)
             blocks.get(i).setAvailable(true);
     }
+    public void setAllocatedBlocks(ArrayList<Block> _blocks){
+        this.blocks = _blocks;
+    }
+    public ArrayList<Block> getAllocatedBlocks(){
+        return blocks;
+    }
 }

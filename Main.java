@@ -37,6 +37,10 @@ public class Main {
             System.out.print("root$ ");
             command = sc.nextLine();
             String[] parameters = command.split(" ");
+
+            //file name could contains more than sub-directories
+            //pathParameters is used to get the file/folder name
+            String[] pathParameters = parameters[1].split("/");
             command = parameters[0];
             if (command.equals("")) {
                 continue;
@@ -69,8 +73,15 @@ public class Main {
                         int size =Integer.parseInt(parameters[2]);
                         vfs.createFile(parameters[1],size,algoNo);
 
+                    //to create a folder enter this path C:/AOS-A3-root/ followed by the folder's path
                     } else if (command.equalsIgnoreCase("CreateFolder")) {
-
+                            Directory newDir = new Directory(parameters[1], pathParameters[pathParameters.length - 1]);
+                            File dir = new File(parameters[1]);
+                            if (!dir.exists()){
+                                dir.mkdirs();
+                            } else {
+                                System.out.println("Directory already exists");
+                            }
                     } else if (command.equalsIgnoreCase("DeleteFile")) {
 
                     } else if (command.equalsIgnoreCase("DeleteFolder")) {

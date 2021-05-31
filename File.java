@@ -1,21 +1,24 @@
+import java.util.ArrayList;
+
 public class File {
     private String filePath;
     private int size;
-    private int[] allocatedBlocks;
+    private ArrayList<Block> allocatedBlocks;
     private boolean deleted;
     private String name;
+    int blockStart;
 
 
     File(String filePath , int size , String name){
-        this.filePath=filePath;
-        this.size=size;
-        this.name=name;
+        this.filePath = filePath;
+        this.size = size;
+        this.name = name;
     }
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public void setAllocatedBlocks(int[] allocatedBlocks) {
+    public void setAllocatedBlocks(ArrayList<Block> allocatedBlocks) {
         this.allocatedBlocks = allocatedBlocks;
     }
 
@@ -23,12 +26,11 @@ public class File {
         this.filePath = filePath;
     }
 
-    public int[] getAllocatedBlocks() {
+    public ArrayList<Block> getAllocatedBlocks() {
         return allocatedBlocks;
     }
 
     public String getFilePath() {
         return filePath;
     }
-
 }
