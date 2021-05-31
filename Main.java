@@ -1,8 +1,9 @@
-import javax.xml.stream.FactoryConfigurationError;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+
     private static VFS vfs=new VFS();
     static boolean checkLengthParams(String command , int length) {
         if (command.equals("DisplayDiskStatus") || command.equals("DisplayDiskStructure") || command.equals("help") || command.equals("exit")) {
@@ -13,12 +14,18 @@ public class Main {
         }
         else{
             if(length!=2)return false;
-            }
+        }
         return true;
     }
 
-
     public static void main(String[] args) {
+        //this is to save the information like (the files information, the folders information,
+        // the allocated blocks and so on) to be able to load it the next time we run the application.
+
+        File theDir = new File("C:/AOS-A3-root");
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
 
         Scanner sc= new Scanner(System.in);
         String command;
@@ -27,7 +34,7 @@ public class Main {
         System.out.println("Enter \"help\" to get list of commands & \"exit\" to close the program");
 
         while (true) {
-            System.out.print("$");
+            System.out.print("root$ ");
             command = sc.nextLine();
             String[] parameters = command.split(" ");
             command = parameters[0];
@@ -57,24 +64,19 @@ public class Main {
                         System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
                                 "2-\tIndexed Allocation\n" +
                                 "3-\tLinked Allocation\n");
-                        System.out.println("Algorithm number : ");
+                        System.out.print("Algorithm number: ");
                         int algoNo = Integer.parseInt(sc.nextLine());
                         int size =Integer.parseInt(parameters[2]);
                         vfs.createFile(parameters[1],size,algoNo);
 
-                    } else if (command.equals("CreateFolder")) {
+                    } else if (command.equalsIgnoreCase("CreateFolder")) {
 
-                    } else if (command.equals("DeleteFile")) {
+                    } else if (command.equalsIgnoreCase("DeleteFile")) {
 
-                    } else if (command.equals("DeleteFolder")) {
+                    } else if (command.equalsIgnoreCase("DeleteFolder")) {
                     }
-
-
                 }
             } else System.out.println("\"" + command + "\"" + " Command not found.");
         }
-
-
-
     }
 }
