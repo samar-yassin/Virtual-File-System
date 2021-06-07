@@ -3,11 +3,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class VFS {
 
-    static ArrayList<String> commands = new ArrayList<>(List.of("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
+    static ArrayList<String> commands = new ArrayList<>(Arrays.asList("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
     FreeSpaceManger spaceManger = new FreeSpaceManger();
     ArrayList<Directory> directories = new ArrayList();
     ArrayList<File1> files = new ArrayList();
@@ -17,7 +18,14 @@ public class VFS {
     VFS() throws IOException {
         directories.add(root);
     }
-
+    
+    VFS(String blocks, int freeBlocks, ArrayList<File1> files, ArrayList<Directory> directories) throws IOException {
+        spaceManger.setBlocks(blocks);
+        spaceManger.setNumberOFfreeBlocks(freeBlocks);
+        this.files = files;
+        this.directories = directories;
+    }
+    
     static ArrayList getCommandList(){
         return commands;
     }
@@ -64,7 +72,7 @@ public class VFS {
 
         if(lastDir != null){
             for(File1 f : lastDir.getFile1s()){
-                if(f.getName().equals(fileName)) {
+                if(f.getName().equals(fileName) && !f.isDeleted()) {
                     System.out.println("File name is already taken.");
                     return;
                 }
@@ -154,7 +162,7 @@ public class VFS {
                 if (f.getName().equals(fileName)) {
                    // files.remove(f);
                    // lastDir.getFiles().remove(f);
-                    lastDir.setDeleted(true);
+                   // lastDir.setDeleted(true);
                     f.setDeleted(true);
                     spaceManger.addToNumberOFfreeBlocks(f.getSize());
                     f.getTechnique().deallocate(spaceManger,f);

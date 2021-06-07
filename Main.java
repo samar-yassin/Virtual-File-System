@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,12 +22,14 @@ DisplayDiskStructure
  */
 public class Main {
 
-    File diskStructure = new File("DiskStructure.vfs");
+    static File diskStructure = new File("DiskStructure.vfs");
     static FileWriter myWriter;
-
+    static BufferedReader myReader;
+    
     static {
         try {
-            myWriter = new FileWriter("DiskStructure.vfs");
+            FileReader reader = new FileReader(diskStructure);
+            myReader = new BufferedReader(reader);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,9 +43,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public Main() throws IOException {
     }
 
     static boolean checkLengthParams(String command , int length) {
@@ -60,13 +61,73 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //this is to save the information like (the files information, the folders information,
         // the allocated blocks and so on) to be able to load it the next time we run the application.
-
+    	if (diskStructure.exists()) {
+    		String line;
+    		if (diskStructure.length() == 0) {
+    			System.out.println("File is empty \n");
+    	        try {
+    	            vfs = new VFS();
+    	        } catch (IOException e) {
+    	            e.printStackTrace();
+    	        }
+    		} else {
+    			String segments[] = null;
+    			String rep = "";
+    			int freeBlocks = 0;
+        		ArrayList<Directory> directories = new ArrayList();
+        		ArrayList<File1> files = new ArrayList();
+        		while( (line = myReader.readLine()) != null) {
+        			//System.out.println(line);
+        			if (line.equals(""))
+        				continue;
+        			segments = line.split("-");
+        			if (segments[0].equals("F")) {
+        				int size = Integer.parseInt(segments[3]);  
+        				File1 newFile = new File1(segments[1] , size , segments[2]);
+            	        AllocationTechniques tech = null;
+            	        if (segments[4].equals("Linked")) {
+            	        	tech = new Linked();
+            	        } else if (segments[4].equals("Indexed")) {
+            	        	tech = new Indexed();
+            	        } else if (segments[4].equals("Contiguous")) {
+            	        	tech = new Contiguous();
+            	        }
+            	        newFile.setTechnique(tech);
+            	        int blockStart = Integer.parseInt(segments[5]);
+            	        newFile.setBlockStart(blockStart);
+            	        if (segments[6].equals("true")) {
+            	        	newFile.setDeleted(true);
+            	        } else {
+            	        	newFile.setDeleted(false);
+            	        }
+            	        files.add(newFile);
+        			} else if (segments[0].equals("D")) {
+        				Directory newDirectory = new Directory(segments[1], segments[2]);
+        				if (segments[3].equals("true")) {
+        					newDirectory.setDeleted(true);
+        				} else {
+        					newDirectory.setDeleted(false);
+        				}
+        				directories.add(newDirectory);
+        			} else {
+        				rep = segments[0];
+        				freeBlocks = Integer.parseInt(segments[1]);  
+        			}
+        		}
+    	        try {
+    	            vfs = new VFS(rep, freeBlocks, files, directories);
+    	        } catch (IOException e) {
+    	            e.printStackTrace();
+    	        }
+    	        //System.out.println(directories);
+    		}
+    	}
 
 
         Scanner sc= new Scanner(System.in);
         String command;
         ArrayList commandList = VFS.getCommandList();
-
+        
         System.out.println("Enter \"help\" to get list of commands & \"exit\" to close the program");
 
         while (true) {
@@ -124,16 +185,22 @@ public class Main {
                 }
             } else System.out.println("\"" + command + "\"" + " Command not found.");
         }
-
+        
+        try {
+            myWriter = new FileWriter(diskStructure);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         myWriter = new FileWriter("DiskStructure.vfs");
-        myWriter.write(  vfs.spaceManger.getBlocks() + " - " + vfs.spaceManger.getNumberOFfreeBlocks() );
+        myWriter.write(  vfs.spaceManger.getBlocks() + "-" + vfs.spaceManger.getNumberOFfreeBlocks() );
         myWriter.write("\n");
         for(File1 f : vfs.files) {
-            myWriter.write("F" + " - " + f.getFilePath()  + " - " + f.getName() + " - " + f.getSize() + " - " + f.getTechnique() + " - " + f.blockStart + " - " + f.isDeleted());
+            myWriter.write("F" + "-" + f.getFilePath()  + "-" + f.getName() + "-" + f.getSize() + "-" + f.getTechnique() + "-" + f.blockStart + "-" + f.isDeleted());
             myWriter.write("\n");
         }
         for(Directory d: vfs.directories){
-            myWriter.write("D" + " - " + d.getDirectoryPath() + " - " + d.getName() +" - " + d.isDeleted());
+            myWriter.write("D" + "-" + d.getDirectoryPath() + "-" + d.getName() +"-" + d.isDeleted());
             myWriter.write("\n");
 
         }

@@ -67,4 +67,9 @@ public class Indexed implements AllocationTechniques {
         manger.setBlocks(newBlocks);
 
     }
+    
+    @Override
+    public String toString() {
+        return "Indexed";
+    }
 }
