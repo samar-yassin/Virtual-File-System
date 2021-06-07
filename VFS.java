@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public class VFS {
 
-    static ArrayList<String> commands = new ArrayList<>(Arrays.asList("CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
+    static ArrayList<String> commands = new ArrayList<>(Arrays.asList("Login","TellUser","CUser","Grant","CreateFile","CreateFolder","DeleteFile","DeleteFolder","DisplayDiskStatus","DisplayDiskStructure","help","exit"));
     FreeSpaceManger spaceManger = new FreeSpaceManger();
     ArrayList<Directory> directories = new ArrayList();
     ArrayList<File1> files = new ArrayList();
@@ -19,12 +21,82 @@ public class VFS {
         directories.add(root);
     }
     
-    VFS(String blocks, int freeBlocks) throws IOException {
-        spaceManger.setBlocks(blocks);
-        spaceManger.setNumberOFfreeBlocks(freeBlocks);
+    void loadData(File diskStructure) throws IOException {
+        FileReader reader = new FileReader(diskStructure);
+        BufferedReader myReader = new BufferedReader(reader);
+ 
+    	if (diskStructure.exists()) {
+    		String line;
+    		if (diskStructure.length() != 0) {
+    			//directories.clear();
+    			String segments[] = null;
+        		while( (line = myReader.readLine()) != null) {
+        			if (line.equals(""))
+        				continue;
+        			segments = line.split("-");
+        			if (segments[0].equals("F")) {
+        				int size = Integer.parseInt(segments[3]); 
+        				 if (segments[6].equals("false")) {
+                 	        if (segments[4].equals("Linked")) {
+                	        	createFile(segments[1], size, 3);
+                	        } else if (segments[4].equals("Indexed")) {
+                	        	createFile(segments[1], size, 2);
+                	        } else if (segments[4].equals("Contiguous")) {
+                	        	createFile(segments[1], size, 1);
+                	        }
+        				 }
+        			} else if (segments[0].equals("D")) {
+        				if (segments[3].equals("false")) {
+        					createFolder(segments[1]);
+        				} 
+        			}
+        		}
+    		}
+    	}
+    	myReader.close();
     }
     
-    static ArrayList getCommandList(){
+    void saveData(File diskStructure) throws IOException {
+    	FileWriter myWriter = new FileWriter(diskStructure);
+   
+        ArrayList<Directory> SavedDirectories = new ArrayList<Directory>();
+        ArrayList<File1> SavedFiles = new ArrayList<File1>();
+
+        myWriter.write(spaceManger.getBlocks() + "-" + spaceManger.getNumberOFfreeBlocks());
+        myWriter.write("\n");
+        for(Directory d: directories){
+        	if (!SavedDirectories.contains(d)) {
+                myWriter.write("D" + "-" + d.getDirectoryPath() + "-" + d.getName() +"-" + d.isDeleted());
+                myWriter.write("\n");
+                SavedDirectories.add(d);
+                
+                for(File1 f: d.getFile1s()){
+                	if (!SavedFiles.contains(f)) {
+        	            myWriter.write("F" + "-" + f.getFilePath()  + "-" + f.getName() + "-" + f.getSize() + "-" + f.getTechnique() + "-" + f.blockStart + "-" + f.isDeleted());
+        	            myWriter.write("\n");
+        	            SavedFiles.add(f);
+                	}
+                }
+                
+                for(Directory sub: d.getSubDirectories()){
+                    myWriter.write("D" + "-" + sub.getDirectoryPath() + "-" + sub.getName() +"-" + sub.isDeleted());
+                    myWriter.write("\n");
+                    SavedDirectories.add(sub);
+                    
+                    for(File1 dub: sub.getFile1s()){
+                    	if (!SavedFiles.contains(dub)) {
+	                        myWriter.write("F" + "-" + dub.getFilePath()  + "-" + dub.getName() + "-" + dub.getSize() + "-" + dub.getTechnique() + "-" + dub.blockStart + "-" + dub.isDeleted());
+	                        myWriter.write("\n");
+	                        SavedFiles.add(dub);
+                    	}
+                    }
+                }
+        	}
+        }
+        myWriter.close();
+
+    }
+    static ArrayList<String> getCommandList(){
         return commands;
     }
 

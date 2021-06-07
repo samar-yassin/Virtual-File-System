@@ -23,17 +23,6 @@ DisplayDiskStructure
 public class Main {
 
     static File diskStructure = new File("DiskStructure.vfs");
-    static FileWriter myWriter;
-    static BufferedReader myReader;
-    
-    static {
-        try {
-            FileReader reader = new FileReader(diskStructure);
-            myReader = new BufferedReader(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static VFS vfs;
 
@@ -61,37 +50,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         //this is to save the information like (the files information, the folders information,
         // the allocated blocks and so on) to be able to load it the next time we run the application.
-    	if (diskStructure.exists()) {
-    		String line;
-    		if (diskStructure.length() == 0) {
-    			System.out.println("File is empty \n");
-    		} else {
-    			String segments[] = null;
-        		while( (line = myReader.readLine()) != null) {
-        			//System.out.println(line);
-        			if (line.equals(""))
-        				continue;
-        			segments = line.split("-");
-        			if (segments[0].equals("F")) {
-        				int size = Integer.parseInt(segments[3]); 
-        				 if (segments[6].equals("false")) {
-                 	        if (segments[4].equals("Linked")) {
-                	        	vfs.createFile(segments[1], size, 3);
-                	        } else if (segments[4].equals("Indexed")) {
-                	        	vfs.createFile(segments[1], size, 2);
-                	        } else if (segments[4].equals("Contiguous")) {
-                	        	vfs.createFile(segments[1], size, 1);
-                	        }
-        				 }
-        			} else if (segments[0].equals("D")) {
-        				if (segments[3].equals("false")) {
-        					vfs.createFolder(segments[1]);
-        				} 
-        			}
-        		}
-    		}
-    	}
-
+    	vfs.loadData(diskStructure);
 
         Scanner sc= new Scanner(System.in);
         String command;
@@ -155,50 +114,7 @@ public class Main {
             } else System.out.println("\"" + command + "\"" + " Command not found.");
         }
         
-        try {
-            myWriter = new FileWriter(diskStructure);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        ArrayList<Directory> SavedDirectories = new ArrayList();
-        ArrayList<File1> SavedFiles = new ArrayList();
-        myWriter = new FileWriter("DiskStructure.vfs");
-        myWriter.write(  vfs.spaceManger.getBlocks() + "-" + vfs.spaceManger.getNumberOFfreeBlocks() );
-        myWriter.write("\n");
-        for(Directory d: vfs.directories){
-        	if (!SavedDirectories.contains(d)) {
-                myWriter.write("D" + "-" + d.getDirectoryPath() + "-" + d.getName() +"-" + d.isDeleted());
-                myWriter.write("\n");
-                SavedDirectories.add(d);
-                
-                for(File1 f: d.getFile1s()){
-                	if (!SavedFiles.contains(f)) {
-        	            myWriter.write("F" + "-" + f.getFilePath()  + "-" + f.getName() + "-" + f.getSize() + "-" + f.getTechnique() + "-" + f.blockStart + "-" + f.isDeleted());
-        	            myWriter.write("\n");
-        	            SavedFiles.add(f);
-                	}
-                }
-                
-                for(Directory sub: d.getSubDirectories()){
-                    myWriter.write("D" + "-" + sub.getDirectoryPath() + "-" + sub.getName() +"-" + sub.isDeleted());
-                    myWriter.write("\n");
-                    SavedDirectories.add(sub);
-                    
-                    for(File1 dub: sub.getFile1s()){
-                    	if (!SavedFiles.contains(dub)) {
-	                        myWriter.write("F" + "-" + dub.getFilePath()  + "-" + dub.getName() + "-" + dub.getSize() + "-" + dub.getTechnique() + "-" + dub.blockStart + "-" + dub.isDeleted());
-	                        myWriter.write("\n");
-	                        SavedFiles.add(dub);
-                    	}
-                    }
-                }
-        	}
-
-        }
-
-        myWriter.close();
-
+        vfs.saveData(diskStructure);
 
     }
 }
