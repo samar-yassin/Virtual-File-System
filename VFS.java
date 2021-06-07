@@ -19,11 +19,9 @@ public class VFS {
         directories.add(root);
     }
     
-    VFS(String blocks, int freeBlocks, ArrayList<File1> files, ArrayList<Directory> directories) throws IOException {
+    VFS(String blocks, int freeBlocks) throws IOException {
         spaceManger.setBlocks(blocks);
         spaceManger.setNumberOFfreeBlocks(freeBlocks);
-        this.files = files;
-        this.directories = directories;
     }
     
     static ArrayList getCommandList(){

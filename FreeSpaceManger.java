@@ -18,7 +18,7 @@ public class FreeSpaceManger {
     }
 
     public void setNumberOFfreeBlocks(int freeBlocks) {
-    	this.numberOFfreeBlocks += freeBlocks;
+    	this.numberOFfreeBlocks = freeBlocks;
     }
     public int getNumberOFfreeBlocks() {
         return numberOFfreeBlocks;
