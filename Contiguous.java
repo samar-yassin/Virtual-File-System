@@ -42,6 +42,7 @@ public class Contiguous implements AllocationTechniques {
             allocated.add(idx++);
         }
 
+
         String blocks = manger.getBlocks();
         String newBlocks= blocks.substring(0,biggestIndex) +block + blocks.substring(biggestIndex+ file1.getSize());
         manger.setBlocks(newBlocks);

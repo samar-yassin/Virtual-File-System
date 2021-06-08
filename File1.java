@@ -4,12 +4,14 @@ public class File1 {
     private String filePath;
     private int size;
     private ArrayList<Integer> allocatedBlocks;
-    private ArrayList<LinkedSection> indexedAllocated;
+    private ArrayList<LinkedSection> linkedAllocated;
     private boolean deleted;
     private String name;
     AllocationTechniques technique;
     int blockStart;
-    int indexForIndexedAllocation;
+    int id;
+    int parentId;
+   // int indexForIndexedAllocation;
 
 
     File1(String filePath , int size , String name){
@@ -18,24 +20,44 @@ public class File1 {
         this.name = name;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public int getBlockStart() {
+        return blockStart;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
     public void setTechnique(AllocationTechniques technique) {
         this.technique = technique;
     }
 
-    public void setIndexedAllocated(ArrayList<LinkedSection> indexedAllocated) {
-        this.indexedAllocated = indexedAllocated;
+    public void setLinkedAllocated(ArrayList<LinkedSection> linkedAllocated) {
+        this.linkedAllocated = linkedAllocated;
     }
 
-    public void setIndexForIndexedAllocation(int indexForIndexedAllocation) {
+ /*   public void setIndexForIndexedAllocation(int indexForIndexedAllocation) {
         this.indexForIndexedAllocation = indexForIndexedAllocation;
     }
 
     public int getIndexForIndexedAllocation() {
         return indexForIndexedAllocation;
     }
-
-    public ArrayList<LinkedSection> getIndexedAllocated() {
-        return indexedAllocated;
+*/
+    public ArrayList<LinkedSection> getLinkedAllocated() {
+        return linkedAllocated;
     }
 
     public AllocationTechniques getTechnique() {

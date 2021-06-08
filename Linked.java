@@ -31,7 +31,7 @@ public class Linked implements AllocationTechniques {
                 count=0;
             }
         }
-        file1.setIndexedAllocated(Allocated);
+        file1.setLinkedAllocated(Allocated);
 
         int start ,end , diff;
         String newBlocks=manger.getBlocks();
@@ -57,7 +57,7 @@ public class Linked implements AllocationTechniques {
     @Override
     public void deallocate(FreeSpaceManger manger, File1 file1) {
         ArrayList<LinkedSection>Allocated =new ArrayList<LinkedSection>();
-        Allocated = file1.getIndexedAllocated();
+        Allocated = file1.getLinkedAllocated();
         int start ,end , diff;
         String newBlocks=manger.getBlocks();
         for (LinkedSection linkedSection : Allocated) {

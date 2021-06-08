@@ -10,13 +10,16 @@ public class FreeSpaceManger {
         this.diskSize = diskSize;
     }
 
-    public void substractFromNumberOFfreeBlocks(int toSubstract) {
+    public void subtractFromNumberOFfreeBlocks(int toSubstract) {
         this.numberOFfreeBlocks -= toSubstract;
     }
     public void addToNumberOFfreeBlocks(int toAdd) {
         this.numberOFfreeBlocks += toAdd;
     }
 
+    public void setNumberOFfreeBlocks(int numberOFfreeBlocks) {
+        this.numberOFfreeBlocks = numberOFfreeBlocks;
+    }
 
     public int getNumberOFfreeBlocks() {
         return numberOFfreeBlocks;

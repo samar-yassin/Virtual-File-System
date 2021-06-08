@@ -1,14 +1,14 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
-/*
-CreateFile root/file1.txt 10
-CreateFile root/folder1/file.txt 40
 
-CreateFolder root/folder1
+/*
+CreateFolder root/samar
+CreateFolder root/moro
+
+CreateFile root/moro/hell.txt 30
+CreateFile root/moro/help.txt 40
+CreateFile root/samar/hi.txt 60
 
 DeleteFile root/file1.txt
 
@@ -20,16 +20,7 @@ DisplayDiskStructure
  */
 public class Main {
 
-    File diskStructure = new File("DiskStructure.vfs");
-    static FileWriter myWriter;
 
-    static {
-        try {
-            myWriter = new FileWriter("DiskStructure.vfs");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static VFS vfs;
 
@@ -39,9 +30,6 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public Main() throws IOException {
     }
 
     static boolean checkLengthParams(String command , int length) {
@@ -58,10 +46,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        //this is to save the information like (the files information, the folders information,
-        // the allocated blocks and so on) to be able to load it the next time we run the application.
-
-
+        vfs.loadFromFile();
 
         Scanner sc= new Scanner(System.in);
         String command;
@@ -125,20 +110,8 @@ public class Main {
             } else System.out.println("\"" + command + "\"" + " Command not found.");
         }
 
-        myWriter = new FileWriter("DiskStructure.vfs");
-        myWriter.write(  vfs.spaceManger.getBlocks() + " - " + vfs.spaceManger.getNumberOFfreeBlocks() );
-        myWriter.write("\n");
-        for(File1 f : vfs.files) {
-            myWriter.write("F" + " - " + f.getFilePath()  + " - " + f.getName() + " - " + f.getSize() + " - " + f.getTechnique() + " - " + f.blockStart + " - " + f.isDeleted());
-            myWriter.write("\n");
-        }
-        for(Directory d: vfs.directories){
-            myWriter.write("D" + " - " + d.getDirectoryPath() + " - " + d.getName() +" - " + d.isDeleted());
-            myWriter.write("\n");
+        vfs.saveToFile();
 
-        }
-
-        myWriter.close();
 
 
     }

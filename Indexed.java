@@ -45,7 +45,7 @@ public class Indexed implements AllocationTechniques {
         }
         manger.setBlocks(newBlocks);
         f.setAllocatedBlocks(Allocated);
-        f.setIndexForIndexedAllocation(indexBlock);
+        f.setBlockStart(indexBlock);
 
 
 
@@ -55,7 +55,7 @@ public class Indexed implements AllocationTechniques {
     public void deallocate(FreeSpaceManger manger, File1 f) {
         ArrayList<Integer>Allocated =new ArrayList<Integer>();
         Allocated = f.getAllocatedBlocks();
-        int index = f.getIndexForIndexedAllocation();
+        int index = f.getBlockStart();
         ArrayList<Integer>NewAllocated =Allocated;
         NewAllocated.add(index);
         String newBlocks=manger.getBlocks();
@@ -66,5 +66,10 @@ public class Indexed implements AllocationTechniques {
         }
         manger.setBlocks(newBlocks);
 
+    }
+
+    @Override
+    public String toString() {
+        return "Indexed";
     }
 }

@@ -3,6 +3,8 @@ import java.util.ArrayList;
 public class Directory {
     private String directoryPath;
     private String name;
+    int id;
+    int parentId;
     private ArrayList <File1> file1s = new ArrayList<>();
     private ArrayList <Directory> subDirectories = new ArrayList<>();
     private boolean deleted = false;
@@ -12,7 +14,21 @@ public class Directory {
         this.name=name;
     }
 
+    public int getParentId() {
+        return parentId;
+    }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void printDirectoryStructure(int level) {
         for(int i=0;i<level;i++) System.out.print(" ");
