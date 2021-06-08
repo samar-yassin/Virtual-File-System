@@ -22,12 +22,33 @@ public class VFS {
     ArrayList<Directory> directories = new ArrayList();
     ArrayList<File1> files = new ArrayList();
     Directory root = new Directory("root","root");
-    static int ID=1;
+    int ID;
+
+    void getMaxID(){
+        if(!directories.isEmpty())
+        {
+            int maxID=0;
+            for(Directory d: directories){
+                if(d.getId()> maxID)
+                    maxID=d.getId();
+            }
+            for(File1 f: files){
+                if(f.getId()> maxID)
+                    maxID=f.getId();
+            }
+
+            ID=maxID+1;
+        }
+        else {
+            ID=1;
+            root.setId(0);
+            directories.add(root);
+        }
+    }
 
 
     VFS() throws IOException {
-        root.setId(0);
-        directories.add(root);
+
     }
 
     static ArrayList getCommandList(){
@@ -51,7 +72,7 @@ public class VFS {
 
 
     void createFile(String path , int size , int tech) throws IOException {
-
+        getMaxID();
         if(size > spaceManger.getNumberOFfreeBlocks()){
             System.out.println("-NO SPACE");
             return ;
@@ -116,6 +137,7 @@ public class VFS {
     }
 
     void createFolder(String path){
+        getMaxID();
         String folders[] = path.split("/");
         String dirName = folders[folders.length-1];
         String newPath="";
@@ -250,7 +272,6 @@ public class VFS {
     }
 
     void displayDiskStructure(int level) {
-
         root.printDirectoryStructure(level);
     }
 
@@ -332,7 +353,7 @@ public class VFS {
 
                 //linking them together
                 for(File1 f : files){
-                    System.out.println(f.getName());
+                   /* System.out.println(f.getName());
                     System.out.println(f.getSize()+ " - "+f.getBlockStart() + " - "+ f.getId());
                     if(f.getTechnique().toString().equals("Linked")){
                         for(LinkedSection l : f.getLinkedAllocated()){
@@ -345,6 +366,7 @@ public class VFS {
                         }
                     }
                     System.out.println("\n\n");
+                    */
                     int pID = f.getParentId();
                     for(Directory d : directories){
                         if(d.getId() == pID){
@@ -354,14 +376,16 @@ public class VFS {
                 }
                 for(Directory child : directories){
                     int pID = child.getParentId();
-                    if(child.getId() == 0)continue; //that's roooooot
+                    if(child.getId() == 0){
+                        root=child;
+                        continue;
+                    }
                     for(Directory parent : directories){
                         if(parent.getId() == pID){
                             parent.addSubDirectories(child);
                         }
                     }
                 }
-
             }
         }
     }

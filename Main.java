@@ -8,9 +8,9 @@ import java.util.Collections;
 import java.util.Scanner;
 /*
 CreateFile root/file1.txt 10
-CreateFile root/folder1/file.txt 40
+CreateFile root/folder8/f.txt 20
 
-CreateFolder root/folder1
+CreateFolder root/folder8
 
 DeleteFile root/file1.txt
 
@@ -27,6 +27,7 @@ public class Main {
 
     private static Protection protection = new Protection();
     private static VFS vfs;
+
     static {
         try {
             vfs = new VFS();
@@ -34,6 +35,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+
 
     static boolean checkLengthParams(String command , int length) {
         if (command.equals("DisplayDiskStatus") || command.equals("DisplayDiskStructure") || command.equals("help") || command.equals("exit") || command.equals("TellUser")) {
@@ -55,8 +57,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        //this is to save the information like (the files information, the folders information,
-        // the allocated blocks and so on) to be able to load it the next time we run the application.
         vfs.loadFromFile();
         vfs.loadData(diskStructure);
 
