@@ -49,12 +49,19 @@ public class Protection {
 		return null;
 	}
 	
+	Admin getAdmin(String name) {
+		for (int i = 0; i < admins.size(); i++) {
+			if (admins.get(i).name.equalsIgnoreCase(name)) return admins.get(i);
+		}
+		return null;
+	}
+	
 	void login(String name, String password, String role) {
 		logged = true;
 		if (role.equals("User")) {
-			currentUser = new User(name, password);
+			currentUser = getUser(name);
 		} else {
-			currentAdmin = new Admin(name, password);
+			currentAdmin = getAdmin(name);
 		}
 		this.currentRole = role;
 	}

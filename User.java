@@ -28,24 +28,38 @@ public class User {
 		return folders;
 	}
 	
-	boolean canCreate(String path) {
+	String removeLastFolder(String path) {
 		String splitPath[] = path.split("/");
 		String newPath = "";
 		for (int i = 0; i < splitPath.length - 1; i++) {
 			newPath += splitPath[i] + "/";
 		}
+		return newPath;
+	}
+	
+	boolean canCreate(String path) {
+		String dir="";
 		for (int i = 0; i < folders.size(); i++) {
-			if (folders.get(i).getDirectoryPath().equals(newPath)) {
-				if (capabilities.get(i).equals("10") || capabilities.get(i).equals("11")) return true;
+			while(!path.equals("")) {
+				dir = folders.get(i).getDirectoryPath() + "/";
+				if (dir.equals(path)) {
+					if (capabilities.get(i).equals("10") || capabilities.get(i).equals("11")) return true;
+				}
+				path = removeLastFolder(path);
 			}
 		}
 		return false;
 	}
 	
 	boolean canDelete(String path) {
+		String dir="";
 		for (int i = 0; i < folders.size(); i++) {
-			if (folders.get(i).getDirectoryPath().equals(path)) {
-				if (capabilities.get(i).equals("01") || capabilities.get(i).equals("11")) return true;
+			while(!path.equals("")) {
+				dir = folders.get(i).getDirectoryPath() + "/";
+				if (dir.equals(path)) {
+					if (capabilities.get(i).equals("01") || capabilities.get(i).equals("11")) return true;
+				}
+				path = removeLastFolder(path);
 			}
 		}
 		return false;

@@ -58,7 +58,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         vfs.loadFromFile();
-        vfs.loadData(diskStructure);
 
         Scanner sc= new Scanner(System.in);
         String command;
@@ -144,18 +143,20 @@ public class Main {
                         }  else {
                             String path = parameters[1];
                             if (command.equals("CreateFile")) {
-
-                                System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
-                                        "2-\tIndexed Allocation\n" +
-                                        "3-\tLinked Allocation\n");
-                                System.out.print("Algorithm number: ");
-                                int algoNo = Integer.parseInt(sc.nextLine());
-                                if(algoNo != 1 && algoNo !=2 && algoNo !=3){
-                                    System.out.println("-Something went wrong");
-                                    continue;
-                                }
-                                int size =Integer.parseInt(parameters[2]);
-                                vfs.createFile(parameters[1],size,algoNo);
+                            	if ((protection.getCurrentRole().equals("Admin")) || protection.getCurrentUser().canCreate(path)) {
+	                                System.out.println("1-\tContiguous Allocation (Using Worst Fit allocation) \n" +
+	                                        "2-\tIndexed Allocation\n" +
+	                                        "3-\tLinked Allocation\n");
+	                                System.out.print("Algorithm number: ");
+	                                int algoNo = Integer.parseInt(sc.nextLine());
+	                                if(algoNo != 1 && algoNo !=2 && algoNo !=3){
+	                                    System.out.println("-Something went wrong");
+	                                    continue;
+	                                }
+	                                int size =Integer.parseInt(parameters[2]);
+	                                vfs.createFile(parameters[1],size,algoNo);
+                            	} else
+                                    System.out.println("You don't have premission to create a file here");
 
                             } else if (command.equalsIgnoreCase("CreateFolder")) {
                                 if ((protection.getCurrentRole().equals("Admin")) || ((User)protection.getCurrentUser()).canCreate(path))
@@ -164,7 +165,10 @@ public class Main {
                                     System.out.println("You don't have premission to create a folder here");
 
                             } else if (command.equalsIgnoreCase("DeleteFile")) {
-                                vfs.deleteFile(path);
+                            	if ((protection.getCurrentRole().equals("Admin")) || protection.getCurrentUser().canDelete(path))
+                            		vfs.deleteFile(path);
+                                else
+                                    System.out.println("You don't have premission to delete a file here");
 
                             } else if (command.equalsIgnoreCase("DeleteFolder")) {
                                 if ((protection.getCurrentRole().equals("Admin")) || protection.getCurrentUser().canDelete(path))
@@ -181,7 +185,6 @@ public class Main {
             } else System.out.println("\"" + command + "\"" + " Command not found.");
         }
         protection.saveData();
-        vfs.saveData(diskStructure);
         vfs.saveToFile();
 
     }
