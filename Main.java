@@ -58,6 +58,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         vfs.loadFromFile();
+        protection.loadData(vfs.directories);
 
         Scanner sc= new Scanner(System.in);
         String command;
@@ -90,9 +91,14 @@ public class Main {
                     }
                 }
                 else if (command.equals("help")) {
+                	System.out.println("\t-------------------");
                     for (int x = 0; x < VFS.getCommandList().size(); x++) {
                         System.out.println("\t" + (VFS.getCommandList().get(x)));
+                        if (VFS.getCommandList().get(x).equals("Grant") || VFS.getCommandList().get(x).equals("DisplayDiskStructure")){
+                        	System.out.println("\t-------------------");
+                        }
                     }
+                    System.out.println("\t-------------------");
                     continue;
                 }
                 else if (command.equals("exit")) {

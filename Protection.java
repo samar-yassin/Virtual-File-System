@@ -1,10 +1,13 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Protection {
-	File allUsers = new File("users.txt");
+	File allUsers;
+	File capabilities;
 	boolean logged;
 	Admin currentAdmin;
 	User currentUser;
@@ -17,8 +20,19 @@ public class Protection {
 		currentUser = null;
 		currentAdmin = null;
 		currentRole = null;
-	    Admin admin = new Admin("admin", "admin");
-	    addAdmin(admin);
+	    try {
+	    	allUsers = new File("users.txt");
+	    	capabilities = new File("capabilities.txt");
+	        allUsers.createNewFile();
+	        capabilities.createNewFile();
+	        if (allUsers.length() == 0) {
+	    	    Admin admin = new Admin("admin", "admin");
+	    	    addAdmin(admin);
+	        }
+	      } catch (IOException e) {
+	        System.out.println("An error occurred.");
+	        e.printStackTrace();
+	      }
 	}
 	
 	void addAdmin(Admin admin) {
@@ -82,16 +96,57 @@ public class Protection {
 		return logged;
 	}
 	
+	void loadData(ArrayList<Directory> directories) throws IOException {
+        FileReader usersReader = new FileReader(allUsers);
+        BufferedReader usersBuffReader = new BufferedReader(usersReader);
+        
+        FileReader capsReader = new FileReader(capabilities);
+        BufferedReader capBuffReader = new BufferedReader(capsReader);
+        
+        String line;
+        while((line = usersBuffReader.readLine()) != null) {
+        	String[] splitLine = line.split("-");
+        	if (splitLine[0].equals("A")) {
+        		Admin newAdmin = new Admin(splitLine[1], splitLine[2]);
+        		admins.add(newAdmin);
+        	}
+        	if (splitLine[0].equals("U")) {
+        		User newUser = new User(splitLine[1], splitLine[2]);
+        		users.add(newUser);
+        	}
+        }
+
+        while((line = capBuffReader.readLine()) != null) {
+        	String[] splitLine = line.split("-");
+        	User user = getUser(splitLine[0]);
+        	if (user != null) {
+                for (int i = 0; i < directories.size(); i++) {
+                	//System.out.println(directories.get(i).getDirectoryPath() + " vs " + splitLine[1]);
+                    if (directories.get(i).getDirectoryPath().equalsIgnoreCase(splitLine[1])) {
+                        user.addCapability(directories.get(i), splitLine[2]);
+                        break;
+                    }
+                }
+        	}
+        }
+	}
+	
 	void saveData() throws IOException {
-		FileWriter myWriter = new FileWriter(allUsers);
+		FileWriter usersWriter = new FileWriter(allUsers);
+		FileWriter capWriter = new FileWriter(capabilities);
 		for (Admin admin: admins) {
-			myWriter.write("A-" + admin.name + "-" + admin.password);
-			myWriter.write("\n");
+			usersWriter.write("A-" + admin.name + "-" + admin.password);
+			usersWriter.write("\n");
 		}
 		for (User user: users) {
-			myWriter.write("C-" + user.name + "-" + user.password);
-			myWriter.write("\n");
+			usersWriter.write("U-" + user.name + "-" + user.password);
+			usersWriter.write("\n");
+			for (int i = 0; i < user.getFolders().size(); i++) {
+				capWriter.write(user.name + "-" + user.getFolders().get(i).getDirectoryPath() + "-" + user.getCapabilities().get(i));
+				capWriter.write("\n");
+			}
 		}
-		myWriter.close();
+		usersWriter.close();
+		capWriter.close();
 	}
 }
