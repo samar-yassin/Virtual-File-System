@@ -17,6 +17,10 @@ public class Admin {
 	}
 	
 	void grantAcess(User user, Directory folder, String capability) {
-		user.addCapability(folder, capability);
+		if (!user.folders.contains(folder)) {
+			user.addCapability(folder, capability);
+		} else {
+			System.out.println("This user already has access to this directory");
+		}
 	}
 }

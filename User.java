@@ -38,8 +38,9 @@ public class User {
 	}
 	
 	boolean canCreate(String path) {
-		String dir="";
+		String dir="", ogPath = path;
 		for (int i = 0; i < folders.size(); i++) {
+			path = ogPath;
 			while(!path.equals("")) {
 				dir = folders.get(i).getDirectoryPath() + "/";
 				if (dir.equals(path)) {
